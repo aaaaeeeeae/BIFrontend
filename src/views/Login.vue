@@ -55,7 +55,6 @@
 
 <script>
 import request from '../request/http.js';
-import router from '../router';
 
 export default {
   name: 'login',
@@ -135,7 +134,7 @@ export default {
               data: JSON.stringify(this.loginForm)
             }).then(res => {
               this.$messageService.successMessage('登录成功', res);
-              router.push('/home');
+              this.$router.push('/home/createChart');
             }).catch(reason => {
               console.log(reason);
             })

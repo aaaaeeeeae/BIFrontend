@@ -12,5 +12,6 @@ html {
   padding: 0;
   height: 100%;
   width: 100%;
+  position: absolute;
 }
 </style>

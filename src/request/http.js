@@ -4,11 +4,14 @@ import Vue from 'vue';
 import requestCode from "../const/requestCode";
 import router from "../router";
 
+// axios默认不带cookie，让其带上，不然每次session值都不一样
+axios.defaults.withCredentials=true;
 const base_url = 'http://localhost:8081/api';
 
 const service = axios.create({
     baseURL: base_url,
-    timeout: 5000,
+    // AI分析得慢，稍微设置大点
+    timeout: 50000,
     headers: {
         'Content-Type': 'application/json'
     }
