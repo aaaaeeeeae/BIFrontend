@@ -84,7 +84,7 @@ export default {
                     this.$confirmService.confirm(successAction, this.cancelAction).then(() => {
                         this.$messageService.successMessage('提交成功')
                     }).catch(err => {
-                        if (err !== undefined || err !== ''){
+                        if (err !== undefined){
                             this.$messageService.errorMessage(err)
                         }
                     })

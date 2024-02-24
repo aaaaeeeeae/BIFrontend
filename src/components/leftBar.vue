@@ -1,6 +1,6 @@
 <template>
     <div class="left-bar">
-        <el-menu default-active="/home/createChart" :router="true">
+        <el-menu :default-active="defaultActive" :router="true">
             <el-menu-item index="/home/createChart">
                 <i class="el-icon-s-data"></i>
                 <span slot="title">分析数据</span>
@@ -34,13 +34,21 @@ export default {
         handleClose(key, keyPath) {
             console.log(key, keyPath);
         }
+    },
+    computed: {
+        defaultActive() {
+            const strs = this.$route.path.split('/');
+            const path = `/${strs[1]}/${strs[2]}` === '/home/detail' ? '/home/myCharts' : `/${strs[1]}/${strs[2]}`
+            return path;
+        }
     }
 }
 </script>
   
 <style scoped lang="less">
-.left-bar ::v-deep{
+.left-bar ::v-deep {
     height: 100%;
+
     .el-menu {
         height: 100%;
     }

@@ -1,12 +1,13 @@
 import { MessageBox } from 'element-ui';
 
 const defaultOption = {
-    title: '提示',
+    title: '',
     message: '请仔细检查你的提交，提交后可在我的图表中查看结果',
     type: 'warning',
     showCancelButton: true,
     confirmButtonText: '确定',
-    cancelButtonText: '取消'
+    cancelButtonText: '取消',
+    showClose: false
 }
 export default {
     confirm(successAction, cancelAction, options = defaultOption) {

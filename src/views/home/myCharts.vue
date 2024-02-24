@@ -10,17 +10,15 @@
                 <el-button type="primary" icon="el-icon-search">搜索</el-button>
             </div>
             <div class="content">
-                <el-row v-for="(item, index) in 2" :key="index" :gutter="20">
-                    <el-col :span="12">
-                        <chartCard></chartCard>
-                    </el-col>
-                    <el-col :span="12">
-                        <chartCard></chartCard>
+                <el-row v-for="(row, index) in splitCharts" :key="index" :gutter="20">
+                    <el-col :span="12" v-for="(item, index) in row" :key="index">
+                        <chartCard :data="item"></chartCard>
                     </el-col>
                 </el-row>
             </div>
             <div class="pagenation">
-                <el-pagination background layout="prev, pager, next" :total="total">
+                <el-pagination background layout="prev, pager, next" :total="total" :current-page.sync="currentPage"
+                    :page-size="pageSize">
                 </el-pagination>
             </div>
         </div>
@@ -29,21 +27,69 @@
 
 <script>
 import chartCard from '../../components/chartCard.vue'
+import request from '../../request/http.js'
 export default {
     name: '',
     data() {
         return {
-            total: 3,
+            total: 100,
             isEmpty: false,
-            isLoading: false,
-            input: ''
+            isLoading: true,
+            input: '',
+            currentPage: 1,
+            pageSize: 4,
+            charts: [],
+            columnCount: 2
         }
     },
     methods: {
+        async getAllCharts() {
+            this.isLoading = true
+            const params = {
+                current: this.currentPage,
+                pageSize: this.pageSize,
+                sortField: 'createTime',
+                sortOrder: 'desc'
+            }
+            await request({
+                url: '/chart/my/list/page',
+                method: 'post',
+                data: params
+            }).then(res => {
+                const data = res.data
+                this.isLoading = false
+                this.total = Number(data.total)
+                if (Number(data.total) === 0) {
+                    this.isEmpty = true
+                }
+                this.charts = JSON.parse(JSON.stringify(data.records))
+            }).catch(err => {
+                this.$messageService.errorMessage(err);
+            })
+        }
 
     },
     components: {
         chartCard
+    },
+    created() {
+        this.getAllCharts()
+    },
+    computed: {
+        splitCharts() {
+            const res = []
+            // 有多少行
+            const rowCount = Math.ceil(this.pageSize / this.columnCount)
+            for (let i = 0; i < rowCount; i++) {
+                const start = i * this.columnCount;
+                const end = start + this.columnCount;
+                res.push(this.charts.slice(start, end))
+            }
+            return res
+        },
+        isdetail() {
+            return this.$route.query.id === undefined
+        }
     }
 }
 </script>
@@ -52,7 +98,6 @@ export default {
 .all-charts {
     margin: 30px;
     width: 70vw;
-    height: 70vh;
 
     .serch {
         width: 100%;
@@ -74,4 +119,9 @@ export default {
     .el-row {
         margin-bottom: 20px;
     }
-}</style>
+
+    .content {
+        overflow: hidden;
+    }
+}
+</style>

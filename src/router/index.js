@@ -23,10 +23,14 @@ const routes = [
       path: 'createChart',
       name: "createChart",
       component: () => import('../views/home/createChart.vue'),
-    },{
+    }, {
       path: 'myCharts',
       name: "myCharts",
       component: () => import('../views/home/myCharts.vue'),
+    }, {
+      path: 'detail',
+      name: 'detail',
+      component: () => import('../views/home/detail.vue')
     }]
   }
 ];
