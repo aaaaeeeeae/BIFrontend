@@ -38,8 +38,9 @@ export default {
     computed: {
         defaultActive() {
             const strs = this.$route.path.split('/');
-            const path = `/${strs[1]}/${strs[2]}` === '/home/detail' ? '/home/myCharts' : `/${strs[1]}/${strs[2]}`
-            return path;
+            const path = `/${strs[1]}/${strs[2]}`
+            const children = ['/home/detail', '/home/edit']
+            return children.includes(path) ? '/home/myCharts' : path
         }
     }
 }

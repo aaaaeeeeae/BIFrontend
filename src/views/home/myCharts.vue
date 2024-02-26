@@ -12,7 +12,7 @@
             <div class="content">
                 <el-row v-for="(row, index) in splitCharts" :key="index" :gutter="20">
                     <el-col :span="12" v-for="(item, index) in row" :key="index">
-                        <chartCard :data="item"></chartCard>
+                        <chartCard :data="item" :getAllCharts="getAllCharts"></chartCard>
                     </el-col>
                 </el-row>
             </div>
@@ -39,7 +39,8 @@ export default {
             currentPage: 1,
             pageSize: 4,
             charts: [],
-            columnCount: 2
+            columnCount: 2,
+            interval: null
         }
     },
     methods: {
@@ -66,6 +67,13 @@ export default {
             }).catch(err => {
                 this.$messageService.errorMessage(err);
             })
+        },
+        startPolling() {
+            // 8s轮询一次
+            this.interval = setInterval(this.getAllCharts, 8000)
+        },
+        stopPolling() {
+            clearInterval(this.interval)
         }
 
     },
@@ -73,7 +81,9 @@ export default {
         chartCard
     },
     created() {
+        // 初始先执行一次请求，后续每8s一次轮询
         this.getAllCharts()
+        this.startPolling()
     },
     computed: {
         splitCharts() {
@@ -90,6 +100,9 @@ export default {
         isdetail() {
             return this.$route.query.id === undefined
         }
+    },
+    beforeDestroy() {
+        this.stopPolling()
     }
 }
 </script>

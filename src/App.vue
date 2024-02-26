@@ -28,9 +28,6 @@ body::-webkit-scrollbar-thumb {
 }
 
 /* 滚动条滑块在鼠标悬停时的样式 */
-body::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
 
 /* 滚动条轨道样式 */
 body::-webkit-scrollbar-track {

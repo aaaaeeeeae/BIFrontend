@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import request from '../request/http.js'
 export default {
     name: '',
     data() {
@@ -40,15 +41,43 @@ export default {
         },
         editChart() {
             this.drawerShow = false
+            this.$router.push(`/home/edit?id=${this.chartId}`)
         },
         deleteChart() {
             this.drawerShow = false
+            const successAction = () => {
+                request({
+                    url: '/chart/delete',
+                    method: 'post',
+                    data: JSON.stringify({ id: this.data.id })
+                })
+            }
+            const cancelAction = () => {
+                this.$messageService.warnningMessage('已取消删除')
+            }
+            const config = {
+                title: '',
+                message: '此操作将永远删除你的图表哦，真的要删除吗？',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                showClose: false
+            }
+            this.$confirmService.confirm(successAction, cancelAction, config).then(() => {
+                this.$messageService.successMessage('已成功删除')
+                this.getAllCharts()
+            }).catch(err => {
+                if (err !== undefined) {
+                    this.$messageService.errorMessage(err)
+                }
+            })
         },
         handleOverlayClick() {
             this.drawerShow = false
         }
     },
-    props: ['data']
+    props: ['data', 'getAllCharts']
 }
 </script>
 
@@ -93,8 +122,6 @@ export default {
             font-weight: 600;
             text-align: center;
         }
-
-        .chart {}
 
         &:hover {
             box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.219);

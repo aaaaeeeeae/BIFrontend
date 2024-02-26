@@ -1,7 +1,6 @@
 <template>
-    <div class="">
-        <el-page-header @back="goBack">
-        </el-page-header>
+    <div class="detail">
+        <goBack></goBack>
         <div class="content">
             <el-card class="res-card">
                 <el-skeleton :rows="12" animated :loading="loading" />
@@ -38,7 +37,10 @@
                 </layout>
             </el-card>
         </div>
-
+        <div class="icon-but">
+            <el-button type="primary" icon="el-icon-edit" circle @click="editChart"></el-button>
+            <el-button type="danger" icon="el-icon-delete" circle @click="deleteChart"></el-button>
+        </div>
     </div>
 </template>
 
@@ -47,6 +49,7 @@ import request from '../../request/http.js'
 import handleTable from '../../utils/hadleTableData.js'
 import { mappingReq, mappingRes } from '../../utils/mapping.js'
 import layout from '../../components/layout.vue'
+import goBack from '../../components/goBack.vue'
 export default {
     name: '',
     data() {
@@ -59,17 +62,47 @@ export default {
         }
     },
     methods: {
-        goBack() {
-            this.$router.back();
+        deleteChart() {
+            const successAction = () => {
+                request({
+                    url: '/chart/delete',
+                    method: 'post',
+                    data: JSON.stringify({ id: this.chartId })
+                })
+            }
+            const cancelAction = () => {
+                this.$messageService.warnningMessage('已取消删除')
+            }
+            const config = {
+                title: '',
+                message: '此操作将永远删除你的图表哦，真的要删除吗？',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                showClose: false
+            }
+            this.$confirmService.confirm(successAction, cancelAction, config).then(() => {
+                this.$messageService.successMessage('已成功删除')
+                this.$router.replace('/home/myCharts')
+            }).catch(err => {
+                if (err !== undefined) {
+                    this.$messageService.errorMessage(err)
+                }
+            })
+        },
+        editChart() {
+            this.$router.push(`/home/edit?id=${this.chartId}`)
         }
-
     },
     components: {
-        layout
+        layout,
+        goBack
     },
     created() {
+        this.loading = true
         request({
-            url: `chart/get?id=${this.$route.query.id}`,
+            url: `chart/get?id=${this.chartId}`,
             method: 'get',
             headers: {
                 'Content-Type': 'x-www-form-urlencoded'
@@ -83,16 +116,45 @@ export default {
         }).catch(err => {
             console.log(err);
         })
+    },
+    computed: {
+        chartId() {
+            return this.$route.query.id
+        }
     }
 }
 </script>
 
 <style lang="less" scoped>
-.content {
-    margin-top: 20px;
-}
+.detail {
+    position: relative;
+    margin: 10px;
 
-.res-card {
-    margin-bottom: 30px;
+    .content {
+        margin-top: 20px;
+    }
+
+    .res-card {
+        margin-bottom: 30px;
+    }
+
+    .icon-but {
+        position: fixed;
+        right: 60px;
+        bottom: 65px;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+
+        .el-button {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
+        }
+
+        .el-button+.el-button,
+        .el-checkbox.is-bordered+.el-checkbox.is-bordered {
+            margin-left: 0px;
+            margin-top: 10px;
+        }
+    }
 }
 </style>
