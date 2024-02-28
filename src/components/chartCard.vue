@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import request from '../request/http.js'
+import { deleteChart } from '../request/chartRequest.js'
 export default {
     name: '',
     data() {
@@ -41,16 +41,12 @@ export default {
         },
         editChart() {
             this.drawerShow = false
-            this.$router.push(`/home/edit?id=${this.chartId}`)
+            this.$router.push(`/home/edit?id=${this.data.id}`)
         },
         deleteChart() {
             this.drawerShow = false
-            const successAction = () => {
-                request({
-                    url: '/chart/delete',
-                    method: 'post',
-                    data: JSON.stringify({ id: this.data.id })
-                })
+            const successAction = async () => {
+                await deleteChart({ id: this.data.id })
             }
             const cancelAction = () => {
                 this.$messageService.warnningMessage('已取消删除')

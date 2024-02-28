@@ -1,42 +1,47 @@
 <template>
-    <div class="create-chart">
+    <div class="create-chart" v-loading="loading" element-loading-text="正在分析中...">
         <chartForm :nextStep="analyseData"></chartForm>
     </div>
 </template>
 
 <script>
-import request from '../../request/http.js'
 import chartForm from '../../components/chartForm.vue'
+import { genChart } from '../../request/chartRequest.js'
 export default {
     name: '',
     data() {
-        return {}
+        return {
+            loading: false
+        }
     },
     methods: {
-        analyseData() {
+        analyseData(form) {
             const successAction = async () => {
                 const formData = new FormData();
-                for (let key in this.form) {
-                    formData.append(key, this.form[key]);
+                for (let key in form) {
+                    formData.append(key, form[key]);
                 }
-                formData.append('file', this.$refs.upload.uploadFiles[0].raw);
-                await request({
-                    url: '/chart/gen',
-                    method: 'post',
-                    data: formData,
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
+                try {
+                    this.loading = true
+                    await genChart(formData)
+                    this.loading = false
+                } catch (error) {
+                    return Promise.reject(error)
+                }
             }
 
             this.$confirmService.confirm(successAction, this.cancelAction).then(() => {
                 this.$messageService.successMessage('提交成功')
+                this.$bus.$emit('clearnForm')
             }).catch(err => {
+                this.loading = false
                 if (err !== undefined) {
                     this.$messageService.errorMessage(err)
                 }
             })
+        },
+        cancelAction() {
+            this.$messageService.warnningMessage('已取消提交')
         }
     },
     components: {

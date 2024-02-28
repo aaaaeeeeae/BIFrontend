@@ -27,7 +27,7 @@
 
 <script>
 import chartCard from '../../components/chartCard.vue'
-import request from '../../request/http.js'
+import { getChartByPage } from '../../request/chartRequest.js'
 export default {
     name: '',
     data() {
@@ -52,21 +52,17 @@ export default {
                 sortField: 'createTime',
                 sortOrder: 'desc'
             }
-            await request({
-                url: '/chart/my/list/page',
-                method: 'post',
-                data: params
-            }).then(res => {
-                const data = res.data
+            try {
+                const data = await getChartByPage(params)
                 this.isLoading = false
                 this.total = Number(data.total)
                 if (Number(data.total) === 0) {
                     this.isEmpty = true
                 }
                 this.charts = JSON.parse(JSON.stringify(data.records))
-            }).catch(err => {
-                this.$messageService.errorMessage(err);
-            })
+            } catch (error) {
+                this.$messageService.errorMessage(error);
+            }
         },
         startPolling() {
             // 8s轮询一次
@@ -103,6 +99,13 @@ export default {
     },
     beforeDestroy() {
         this.stopPolling()
+    },
+    watch: {
+        currentPage(newValue, oldValue) {
+            if (newValue !== oldValue) {
+                this.getAllCharts()
+            }
+        }
     }
 }
 </script>

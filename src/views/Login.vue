@@ -54,8 +54,7 @@
 </template>
 
 <script>
-import request from '../request/http.js';
-
+import { userLogin, userRegister } from '../request/userRequest.js';
 export default {
   name: 'login',
   data() {
@@ -128,33 +127,31 @@ export default {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           if (formName === 'loginForm') {
-            await request({
-              url: '/user/login',
-              method: 'post',
-              data: JSON.stringify(this.loginForm)
-            }).then(res => {
-              this.$messageService.successMessage('登录成功', res);
+            try {
+              await userLogin(JSON.stringify(this.loginForm))
+              this.$messageService.successMessage('登录成功');
               this.$router.push('/home/createChart');
-            }).catch(reason => {
-              console.log(reason);
-            })
+            } catch (error) {
+              console.log(error);
+            }
           } else if (formName === 'registerForm') {
-            await request({
-              url: 'user/register',
-              method: 'post',
-              data: JSON.stringify(this.registerForm)
-            }).then(res => {
-              this.$messageService.successMessage('注册成功', res);
-              location.reload();
-            }).catch(reason => {
-              console.log(reason);
-            })
+            try {
+              await userRegister(JSON.stringify(this.registerForm))
+              this.$messageService.successMessage('注册成功');
+              this.tableName = 'login'
+              this.resetRegisterForm()
+            } catch (error) {
+              console.log(error);
+            }
           }
         } else {
           this.$messageService.errorMessage('提交失败，请检查你的输入！')
           return false;
         }
       });
+    },
+    resetRegisterForm() {
+      this.$refs.registerForm.resetFields();
     }
   }
 }

@@ -42,7 +42,7 @@
 
 
 <script>
-import request from '../request/http.js'
+import { userLogout } from '../request/userRequest'
 export default {
     data() {
         return {
@@ -51,18 +51,15 @@ export default {
         };
     },
     methods: {
-        async handleSelect(key, keyPath) {
-            console.log(key, keyPath);
+        async handleSelect(key) {
             if (key === 'quit') {
-                await request({
-                    url: '/user/logout',
-                    method: 'post',
-                }).then(res => {
-                    this.$messageService.successMessage('退出登录成功', res);
+                try {
+                    await userLogout()
+                    this.$messageService.successMessage('退出登录成功');
                     this.$router.push('/login');
-                }).catch(reason => {
-                    console.log(reason, 'error!');
-                }) 
+                } catch (error) {
+                    console.log(error, 'error!');
+                }
             }
         }
     }

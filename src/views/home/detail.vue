@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import request from '../../request/http.js'
+import { deleteChart, getChartById } from '../../request/chartRequest'
 import handleTable from '../../utils/hadleTableData.js'
 import { mappingReq, mappingRes } from '../../utils/mapping.js'
 import layout from '../../components/layout.vue'
@@ -55,7 +55,7 @@ export default {
     data() {
         return {
             loading: true,
-            data: {},
+            data: null,
             tableData: [],
             queryData: {},
             resultData: {}
@@ -63,12 +63,8 @@ export default {
     },
     methods: {
         deleteChart() {
-            const successAction = () => {
-                request({
-                    url: '/chart/delete',
-                    method: 'post',
-                    data: JSON.stringify({ id: this.chartId })
-                })
+            const successAction = async () => {
+                await deleteChart({ id: this.data.id })
             }
             const cancelAction = () => {
                 this.$messageService.warnningMessage('已取消删除')
@@ -93,6 +89,19 @@ export default {
         },
         editChart() {
             this.$router.push(`/home/edit?id=${this.chartId}`)
+        },
+        async init() {
+            try {
+                this.loading = true
+                const data = await getChartById(this.chartId)
+                this.loading = false
+                this.data = JSON.parse(JSON.stringify(data))
+                this.tableData = handleTable(this.data.chartData)
+                this.queryData = mappingReq(this.data)
+                this.resultData = mappingRes(this.data)
+            } catch (error) {
+                console.log(error);
+            }
         }
     },
     components: {
@@ -100,22 +109,7 @@ export default {
         goBack
     },
     created() {
-        this.loading = true
-        request({
-            url: `chart/get?id=${this.chartId}`,
-            method: 'get',
-            headers: {
-                'Content-Type': 'x-www-form-urlencoded'
-            }
-        }).then(res => {
-            this.loading = false
-            this.data = JSON.parse(JSON.stringify(res.data))
-            this.tableData = handleTable(this.data.chartData)
-            this.queryData = mappingReq(this.data)
-            this.resultData = mappingRes(this.data)
-        }).catch(err => {
-            console.log(err);
-        })
+        this.init()
     },
     computed: {
         chartId() {
