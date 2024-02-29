@@ -20,4 +20,10 @@ function userLogout() {
         method: 'post'
     })
 }
-export { userLogin, userRegister, userLogout }
+function getLoginUserId() {
+    return request({
+        url: 'user/get/login',
+        method: 'get'
+    })
+}
+export { userLogin, userRegister, userLogout, getLoginUserId }

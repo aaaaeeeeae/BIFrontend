@@ -4,14 +4,19 @@
         <div class="content">
             <el-card class="res-card">
                 <el-skeleton :rows="12" animated :loading="loading" />
-                <layout v-for="(value, key) in resultData" :key="key">
-                    <template slot="title">
-                        <span>{{ key }}</span>
-                    </template>
-                    <template slot="content">
-                        <span>{{ value }}</span>
-                    </template>
-                </layout>
+                <div class="content">
+                    <div class="chart">
+                        <echarts :option="chart"></echarts>
+                    </div>
+                    <layout v-for="(value, key) in resultData" :key="key">
+                        <template slot="title">
+                            <span>{{ key }}</span>
+                        </template>
+                        <template slot="content">
+                            <span>{{ value }}</span>
+                        </template>
+                    </layout>
+                </div>
             </el-card>
             <el-card class="req-card">
                 <el-skeleton :rows="12" animated :loading="loading" />
@@ -50,6 +55,8 @@ import handleTable from '../../utils/hadleTableData.js'
 import { mappingReq, mappingRes } from '../../utils/mapping.js'
 import layout from '../../components/layout.vue'
 import goBack from '../../components/goBack.vue'
+import echarts from '../../components/echarts.vue'
+import { convertToObj } from '../../utils/handleMarked'
 export default {
     name: '',
     data() {
@@ -58,7 +65,8 @@ export default {
             data: null,
             tableData: [],
             queryData: {},
-            resultData: {}
+            resultData: {},
+            chart: {}
         }
     },
     methods: {
@@ -99,6 +107,11 @@ export default {
                 this.tableData = handleTable(this.data.chartData)
                 this.queryData = mappingReq(this.data)
                 this.resultData = mappingRes(this.data)
+                this.chart = convertToObj(data.genChart)
+                console.log(this.chart);
+                // const temp = convertToHTML(this.data.genChart)
+                // console.log(convertToObj(this.data.genChart));
+
             } catch (error) {
                 console.log(error);
             }
@@ -106,7 +119,8 @@ export default {
     },
     components: {
         layout,
-        goBack
+        goBack,
+        echarts
     },
     created() {
         this.init()
@@ -130,6 +144,20 @@ export default {
 
     .res-card {
         margin-bottom: 30px;
+
+        .content {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+
+            .chart {
+                border: 0.5px solid rgba(128, 128, 128, 0.151);
+                position: relative;
+                width: 60vw;
+                height: 50vh;
+            }
+        }
     }
 
     .icon-but {

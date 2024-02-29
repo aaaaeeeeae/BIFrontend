@@ -28,6 +28,7 @@
 <script>
 import chartCard from '../../components/chartCard.vue'
 import { getChartByPage } from '../../request/chartRequest.js'
+import { getLoginUserId } from '../../request/userRequest.js'
 export default {
     name: '',
     data() {
@@ -40,7 +41,8 @@ export default {
             pageSize: 4,
             charts: [],
             columnCount: 2,
-            interval: null
+            interval: null,
+            userId: null
         }
     },
     methods: {
@@ -66,10 +68,19 @@ export default {
         },
         startPolling() {
             // 8s轮询一次
-            this.interval = setInterval(this.getAllCharts, 8000)
+            this.interval = setInterval(this.getAllCharts, 60000)
         },
         stopPolling() {
             clearInterval(this.interval)
+        },
+        async getCurrentUserid() {
+            try {
+                const res = await getLoginUserId();
+                this.userId = res.id
+                console.log(this.userId);
+            } catch (error) {
+                console.log(error);
+            }
         }
 
     },
@@ -77,6 +88,7 @@ export default {
         chartCard
     },
     created() {
+        // this.getCurrentUserid()
         // 初始先执行一次请求，后续每8s一次轮询
         this.getAllCharts()
         this.startPolling()

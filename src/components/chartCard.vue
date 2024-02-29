@@ -12,7 +12,9 @@
                     <el-button type="danger" icon="el-icon-delete" circle @click.stop="deleteChart"></el-button>
                 </div>
             </el-drawer>
-            <div class="chart">图表.....</div>
+            <div class="chart-warrap">
+                <echarts :option="chart"></echarts>
+            </div>
             <div class="chart-name">{{ data.name }}</div>
         </el-card>
     </div>
@@ -20,11 +22,14 @@
 
 <script>
 import { deleteChart } from '../request/chartRequest.js'
+import echarts from './echarts.vue';
+import { convertToObj } from '../utils/handleMarked'
 export default {
     name: '',
     data() {
         return {
-            drawerShow: false
+            drawerShow: false,
+            chart: null
         }
     },
     methods: {
@@ -73,7 +78,20 @@ export default {
             this.drawerShow = false
         }
     },
-    props: ['data', 'getAllCharts']
+    props: ['data', 'getAllCharts'],
+    components: {
+        echarts
+    },
+    watch: {
+        data: {
+            deep: true,
+            immediate: true,
+            handler(newValue) {
+                this.data = newValue
+                this.chart = convertToObj(this.data.genChart)
+            }
+        }
+    }
 }
 </script>
 
@@ -111,6 +129,14 @@ export default {
                 justify-content: space-around;
                 align-items: center;
             }
+        }
+
+        .chart-warrap {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            margin-top: 15px;
+            margin-bottom: 10px;
         }
 
         .chart-name {

@@ -1,4 +1,5 @@
 const dayjs = require('dayjs');
+import { convertTotext } from './handleMarked'
 function mappingReq(data) {
     return {
         图表编码: data.id,
@@ -11,8 +12,7 @@ function mappingReq(data) {
 }
 function mappingRes(data) {
     return {
-        可视化结果: data.genChart,
-        分析结论: data.genResult.replace("分析结论：", '')
+        分析结论: convertTotext(data.genResult.replace("分析结论：", ''))
     }
 
 }
