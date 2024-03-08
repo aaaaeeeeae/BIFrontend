@@ -16,6 +16,11 @@ const routes = [
     component: Login
   },
   {
+    path: '/introduction',
+    name: 'introduction',
+    component: () => import('../views/introduction.vue')
+  },
+  {
     path: '/home',
     name: 'home',
     component: () => import('../views/home/index.vue'),
@@ -35,6 +40,9 @@ const routes = [
       path: 'edit',
       name: "edit",
       component: () => import('../views/home/edit.vue')
+    }, {
+      path: '',
+      redirect: 'createChart'
     }]
   }
 ];

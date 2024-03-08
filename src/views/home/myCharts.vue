@@ -1,24 +1,24 @@
 <template>
     <div class="all-charts" v-loading="isLoading" element-loading-text="正在拼命加载中...">
+        <div class="serch">
+            <el-input placeholder="请输入图表名" v-model="serchInput" clearable class="serch-content" @clear="getAllCharts">
+            </el-input>
+            <el-button type="primary" icon="el-icon-search" @click="getAllCharts">搜索</el-button>
+        </div>
         <div class="is-empty" v-if="isEmpty">
             <el-empty description="暂无图表，快去创建吧~"></el-empty>
         </div>
         <div v-else>
-            <div class="serch">
-                <el-input placeholder="请输入内容" v-model="input" clearable class="serch-content">
-                </el-input>
-                <el-button type="primary" icon="el-icon-search">搜索</el-button>
-            </div>
             <div class="content">
                 <el-row v-for="(row, index) in splitCharts" :key="index" :gutter="20">
-                    <el-col :span="12" v-for="(item, index) in row" :key="index">
+                    <el-col :span="12" v-for="item in row" :key="item.id">
                         <chartCard :data="item" :getAllCharts="getAllCharts"></chartCard>
                     </el-col>
                 </el-row>
             </div>
             <div class="pagenation">
-                <el-pagination background layout="prev, pager, next" :total="total" :current-page.sync="currentPage"
-                    :page-size="pageSize">
+                <el-pagination background layout="prev, pager, next" :total="total" :current-page="currentPage"
+                    :page-size="pageSize" @current-change="handlePageChange">
                 </el-pagination>
             </div>
         </div>
@@ -36,7 +36,7 @@ export default {
             total: 100,
             isEmpty: false,
             isLoading: true,
-            input: '',
+            serchInput: '',
             currentPage: 1,
             pageSize: 4,
             charts: [],
@@ -47,16 +47,17 @@ export default {
     },
     methods: {
         async getAllCharts() {
-            this.isLoading = true
+            console.log(this.serchInput);
+            this.isEmpty = false
             const params = {
                 current: this.currentPage,
                 pageSize: this.pageSize,
                 sortField: 'createTime',
-                sortOrder: 'desc'
+                sortOrder: 'desc',
+                name: this.serchInput.trim(),
             }
             try {
                 const data = await getChartByPage(params)
-                this.isLoading = false
                 this.total = Number(data.total)
                 if (Number(data.total) === 0) {
                     this.isEmpty = true
@@ -67,7 +68,7 @@ export default {
             }
         },
         startPolling() {
-            // 8s轮询一次
+            // 1min轮询一次
             this.interval = setInterval(this.getAllCharts, 60000)
         },
         stopPolling() {
@@ -77,21 +78,31 @@ export default {
             try {
                 const res = await getLoginUserId();
                 this.userId = res.id
-                console.log(this.userId);
             } catch (error) {
                 console.log(error);
             }
+        },
+        handlePageChange(newVal) {
+            sessionStorage.setItem(`currentPage-${this.userId}`, newVal)
+            this.currentPage = newVal
+            this.getAllCharts()
         }
-
     },
     components: {
         chartCard
     },
-    created() {
-        // this.getCurrentUserid()
+    async created() {
         // 初始先执行一次请求，后续每8s一次轮询
-        this.getAllCharts()
-        this.startPolling()
+        try {
+            this.isLoading = true
+            await this.getCurrentUserid()
+            this.currentPage = parseInt(sessionStorage.getItem(`currentPage-${this.userId}`)) || 1
+            await this.getAllCharts()
+            this.isLoading = false
+            this.startPolling()
+        } catch (error) {
+            console.log(error);
+        }
     },
     computed: {
         splitCharts() {
@@ -111,13 +122,6 @@ export default {
     },
     beforeDestroy() {
         this.stopPolling()
-    },
-    watch: {
-        currentPage(newValue, oldValue) {
-            if (newValue !== oldValue) {
-                this.getAllCharts()
-            }
-        }
     }
 }
 </script>

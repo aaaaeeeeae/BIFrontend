@@ -13,18 +13,18 @@ export default {
     data() {
         return {
             chartInstance: null,
-            loading: false
+            loading: true
         }
     },
     methods: {
         initChart() {
             const div = this.$refs.chart
             this.chartInstance = echarts.init(div)
-            this.updateCharts()
+            this.updateCharts(this.option)
         },
-        updateCharts() {
+        updateCharts(option) {
             if (this.chartInstance) {
-                this.chartInstance.setOption(this.option)
+                this.chartInstance.setOption(option)
             }
         }
     },
@@ -32,11 +32,9 @@ export default {
     watch: {
         option: {
             deep: true,
-            immediate: true,
             handler(newVal) {
-                this.option = newVal
-                console.log(this.option);
-                this.updateCharts()
+                console.log(newVal);
+                this.updateCharts(newVal)
             }
         }
     },

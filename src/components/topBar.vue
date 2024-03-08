@@ -1,11 +1,12 @@
 <template>
     <div class="top-bar">
-        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+        <el-menu :default-active="defaultActive" class="el-menu-demo" mode="horizontal" :router="true">
             <div class="bar-content">
                 <el-row :gutter="20">
                     <el-col :span="8" :offset="4">
                         <div class="middle-content">
-                            <el-menu-item index="1">处理中心</el-menu-item>
+                            <el-menu-item index="/introduction">产品概览</el-menu-item>
+                            <el-menu-item index="/home">处理中心</el-menu-item>
                             <el-submenu index="2">
                                 <template slot="title">我的工作台</template>
                                 <el-menu-item index="2-1">选项1</el-menu-item>
@@ -18,7 +19,6 @@
                                     <el-menu-item index="2-4-3">选项3</el-menu-item>
                                 </el-submenu>
                             </el-submenu>
-                            <el-menu-item index="3">消息中心</el-menu-item>
                         </div>
                     </el-col>
                     <el-col :span="2" :offset="9">
@@ -46,7 +46,6 @@ import { userLogout } from '../request/userRequest'
 export default {
     data() {
         return {
-            activeIndex: '1',
             userUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
         };
     },
@@ -61,6 +60,11 @@ export default {
                     console.log(error, 'error!');
                 }
             }
+        }
+    },
+    computed: {
+        defaultActive(){
+            return `/${this.$route.path.split('/')[1]}`;
         }
     }
 }

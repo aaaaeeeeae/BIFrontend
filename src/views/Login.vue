@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="login" v-loading="loading" element-loading-text="正在拼命加载中...">
     <div class="bck-photo"></div>
     <div class="card">
       <el-card shadow="always">
@@ -86,6 +86,7 @@ export default {
       }
     }
     return {
+      loading: false,
       tableName: 'login',
       loginForm: {
         userAccount: '',
@@ -126,11 +127,13 @@ export default {
     async submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
+          this.loading = true
           if (formName === 'loginForm') {
             try {
               await userLogin(JSON.stringify(this.loginForm))
+              this.loading = false
               this.$messageService.successMessage('登录成功');
-              this.$router.push('/home/createChart');
+              this.$router.push('/introduction');
             } catch (error) {
               console.log(error);
             }
@@ -141,6 +144,7 @@ export default {
               this.tableName = 'login'
               this.resetRegisterForm()
             } catch (error) {
+              this.loading = false
               console.log(error);
             }
           }

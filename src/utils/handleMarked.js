@@ -12,7 +12,6 @@ function convertToObj(markdown) {
         const cleanedContent = p1.replace(/option\s*=\s*\{/g, '{');
         return cleanedContent;
     });
-    console.log(cleanedCode);
     return JSON.parse(cleanedCode);
 }
 export { convertTotext, convertToObj }
