@@ -3,7 +3,13 @@
         <el-menu :default-active="defaultActive" class="el-menu-demo" mode="horizontal" :router="true">
             <div class="bar-content">
                 <el-row :gutter="20">
-                    <el-col :span="8" :offset="4">
+                    <el-col :span="3" :offset="1">
+                        <div class="logo">
+                            <img src="../assets/weblogo.png" alt="" class="weblogo">
+                            <img src="../assets/wenzi.png" alt="" class="wenzi">
+                        </div>
+                    </el-col>
+                    <el-col :span="6" :offset="3">
                         <div class="middle-content">
                             <el-menu-item index="/introduction">产品概览</el-menu-item>
                             <el-menu-item index="/home">处理中心</el-menu-item>
@@ -63,7 +69,7 @@ export default {
         }
     },
     computed: {
-        defaultActive(){
+        defaultActive() {
             return `/${this.$route.path.split('/')[1]}`;
         }
     }
@@ -79,6 +85,25 @@ export default {
         .is-active {
             background-color: #409EFF;
             color: white;
+        }
+    }
+
+    .logo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 54px;
+
+        .weblogo {
+            display: block;
+            width: 40px;
+            height: 40px;
+        }
+
+        .wenzi {
+            display: block;
+            height: 30px;
+            margin-left: 5px;
         }
     }
 

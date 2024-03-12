@@ -11,29 +11,32 @@
 </template>
 
 <script>
-import MarkDownIt from 'markdown-it'
+import { parseMarkdownForHtml } from '../utils/markdownParser'
 export default {
     name: '',
     data() {
         return {
-
+            toc: []
         }
     },
-    methods: {
-
-    },
     props: ['content'],
+    created() {
+        this.$bus.$on('getCatalog', this.getCatalog)
+    },
+    beforeDestroy(){
+        this.$bus.$off('getCatalog')
+    },
     computed: {
         compliedMarkdown() {
-            const md = new MarkDownIt()
-            return md.render(this.content)
+            const html = parseMarkdownForHtml(this.content)
+            return html
         }
     }
 }
 </script>
 
 <style lang="less" scoped>
-.card{
+.card {
     border-radius: 15px;
 }
 </style>

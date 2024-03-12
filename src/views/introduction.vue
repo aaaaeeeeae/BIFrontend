@@ -4,10 +4,16 @@
             <el-header>
                 <topBar></topBar>
             </el-header>
-            <el-main class="main">
-                <mdContainer :content="content" class="child"></mdContainer>
-                <feedback class="child"></feedback>
-            </el-main>
+            <el-container>
+                <el-main class="main">
+                    <mdContainer :content="content" class="child"></mdContainer>
+                    <feedback class="child"></feedback>
+                </el-main>
+                <el-aside width="200px">
+                    <mdCatalog :content="content"></mdCatalog>
+                </el-aside>
+            </el-container>
+
         </el-container>
     </div>
 </template>
@@ -16,12 +22,13 @@
 import topBar from '../components/topBar.vue';
 import mdContainer from '../components/mdContainer.vue'
 import feedback from '../components/feedback.vue'
+import mdCatalog from '../components/mdCatalog.vue'
 export default {
     name: '',
     data() {
         return {
             content: null,
-            filePath: '../../md/智能分析业务流程.md'
+            filePath: '../../md/智能DA平台.md'
         }
     },
     methods: {
@@ -35,13 +42,14 @@ export default {
                 })
         }
     },
-    created() {
-        this.getMdFile()
+    async created() {
+        await this.getMdFile()
     },
     components: {
         topBar,
         mdContainer,
-        feedback
+        feedback,
+        mdCatalog
     }
 }
 </script>
