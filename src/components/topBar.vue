@@ -1,6 +1,6 @@
 <template>
     <div class="top-bar">
-        <el-menu :default-active="defaultActive" class="el-menu-demo" mode="horizontal" :router="true">
+        <el-menu :default-active="defaultActive" class="el-menu-demo" mode="horizontal" @select="handleSelect" :router="true">
             <div class="bar-content">
                 <el-row :gutter="20">
                     <el-col :span="3" :offset="1">
@@ -13,18 +13,6 @@
                         <div class="middle-content">
                             <el-menu-item index="/introduction">产品概览</el-menu-item>
                             <el-menu-item index="/home">处理中心</el-menu-item>
-                            <el-submenu index="2">
-                                <template slot="title">我的工作台</template>
-                                <el-menu-item index="2-1">选项1</el-menu-item>
-                                <el-menu-item index="2-2">选项2</el-menu-item>
-                                <el-menu-item index="2-3">选项3</el-menu-item>
-                                <el-submenu index="2-4">
-                                    <template slot="title">选项4</template>
-                                    <el-menu-item index="2-4-1">选项1</el-menu-item>
-                                    <el-menu-item index="2-4-2">选项2</el-menu-item>
-                                    <el-menu-item index="2-4-3">选项3</el-menu-item>
-                                </el-submenu>
-                            </el-submenu>
                         </div>
                     </el-col>
                     <el-col :span="2" :offset="9">
@@ -61,7 +49,7 @@ export default {
                 try {
                     await userLogout()
                     this.$messageService.successMessage('退出登录成功');
-                    this.$router.push('/login');
+                    this.$router.replace('/login');
                 } catch (error) {
                     console.log(error, 'error!');
                 }
