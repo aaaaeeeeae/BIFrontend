@@ -108,10 +108,6 @@ export default {
                 this.queryData = mappingReq(this.data)
                 this.resultData = mappingRes(this.data)
                 this.chart = convertToObj(data.genChart)
-                console.log(this.chart);
-                // const temp = convertToHTML(this.data.genChart)
-                // console.log(convertToObj(this.data.genChart));
-
             } catch (error) {
                 console.log(error);
             }

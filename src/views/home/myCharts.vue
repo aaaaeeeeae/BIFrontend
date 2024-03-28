@@ -12,7 +12,7 @@
             <div class="content">
                 <el-row v-for="(row, index) in splitCharts" :key="index" :gutter="20">
                     <el-col :span="12" v-for="item in row" :key="item.id">
-                        <chartCard :data="item" :getAllCharts="getAllCharts"></chartCard>
+                        <chartCard :data="item" :getAllCharts="getAllCharts" :userId="userId"></chartCard>
                     </el-col>
                 </el-row>
             </div>
@@ -47,7 +47,6 @@ export default {
     },
     methods: {
         async getAllCharts() {
-            console.log(this.serchInput);
             this.isEmpty = false
             const params = {
                 current: this.currentPage,

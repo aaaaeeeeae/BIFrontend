@@ -7,11 +7,9 @@ function convertTotext(markdown) {
     return md.render(markdown).replace(/<[^>]*>/gm, '');
 }
 function convertToObj(markdown) {
-    const regex = /```javascript\n?([\s\S]*?)\n?```/gs;
-    const cleanedCode = markdown.replace(regex, (match, p1) => {
-        const cleanedContent = p1.replace(/option\s*=\s*\{/g, '{');
-        return cleanedContent;
-    });
+    const regex1 = /```javascript\n?([\s\S]*?)\n?```/gs;
+    const regex2 = /option\s*=\s*\{/g;
+    const cleanedCode = markdown.replace(regex1, '').replace(regex2, '{');
     return JSON.parse(cleanedCode);
 }
 export { convertTotext, convertToObj }

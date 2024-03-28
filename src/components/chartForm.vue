@@ -72,6 +72,7 @@ export default {
             if (!isLt1M) {
                 this.$messageService.errorMessage('上传失败，文件过大');
                 this.$refs.upload.clearFiles();
+                return
             }
             this.form.file = file.raw;
             return isLt1M;
@@ -100,14 +101,12 @@ export default {
     props: ['nextStep', 'oldData'],
     computed: {
         isEdit() {
-            console.log(this.$route.path.includes('/edit'));
             return this.$route.path.includes('/edit')
         }
     },
     mounted() {
         this.$bus.$on('clearnForm', this.clearnForm)
         if (this.isEdit) {
-            console.log(this.oldData);
             this.form = this.oldData
         }
     },

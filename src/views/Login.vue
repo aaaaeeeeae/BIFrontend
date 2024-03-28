@@ -135,11 +135,14 @@ export default {
               this.$messageService.successMessage('登录成功');
               this.$router.push('/introduction');
             } catch (error) {
+              this.loading = false
+              this.loginForm.userPassword = ""
               console.log(error);
             }
           } else if (formName === 'registerForm') {
             try {
               await userRegister(JSON.stringify(this.registerForm))
+              this.loading = false
               this.$messageService.successMessage('注册成功');
               this.tableName = 'login'
               this.resetRegisterForm()
@@ -170,8 +173,10 @@ export default {
   .bck-photo {
     height: 100%;
     width: 100%;
-    background-image: url('../photos/shu.png');
-    filter: blur(1.5px);
+    background-image: url('../photos/fengjin.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    // filter: blur(1.5px);
     display: flex;
   }
 

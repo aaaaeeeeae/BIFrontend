@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { deleteChart } from '../request/chartRequest.js'
+import { deleteChart, tryAgain } from '../request/chartRequest.js'
 import echarts from './echarts.vue';
 import { convertToObj } from '../utils/handleMarked'
 export default {
@@ -76,9 +76,32 @@ export default {
         },
         handleOverlayClick() {
             this.drawerShow = false
+        },
+        async requestWithretry(data, maxRetries = 3, delay = 2000) {
+            const retryKey = `${this.userId}-retries-tryAgain`
+            let retries = parseInt(sessionStorage.getItem(retryKey) || 0)
+            try {
+                const converted = convertToObj(data)
+                this.chart = converted
+                sessionStorage.removeItem(retryKey)
+                return
+            } catch (error) {
+                console.log(error);
+                if (retries >= maxRetries) {
+                    this.$messageService.errorMessage('请求失败，并已达最大重试次数')
+                    return
+                }
+                console.log(`第${retries}重试中.....`)
+                retries++;
+                sessionStorage.setItem(retryKey, retries.toString());
+                const res = tryAgain(this.data.id)
+                await new Promise(resolve => setTimeout(resolve, delay));
+                this.requestWithretry(res.genChart, retries - 1, delay * 2)
+            }
         }
+
     },
-    props: ['data', 'getAllCharts'],
+    props: ['data', 'getAllCharts', 'userId'],
     components: {
         echarts
     },
@@ -88,7 +111,18 @@ export default {
             immediate: true,
             handler(newValue) {
                 this.data = newValue
-                this.chart = convertToObj(this.data.genChart)
+                if (this.data) {
+                    this.requestWithretry(this.data.genChart)
+                }
+            }
+        },
+        chart: {
+            deep: true,
+            immediate: true,
+            handler(newVal) {
+                if (newVal) {
+                    this.chart = newVal
+                }
             }
         }
     }

@@ -40,4 +40,40 @@ function editChart(data) {
         data
     })
 }
-export { getChartByPage, genChart, deleteChart, getChartById, editChart }
+
+function tryAgain(data) {
+    return request({
+        url: `/chart/tryAgain?id=${data}`,
+        method: 'get',
+        headers: {
+            'Content-Type': 'x-www-form-urlencoded'
+        }
+    })
+}
+
+async function genChartWithRetry(userId, data, maxRetries = 3, delay = 1000) {
+    const retryKey = `${userId}-retries-genChart`
+    let retries = parseInt(sessionStorage.getItem(retryKey) || 0)
+    try {
+        const res = request({
+            url: '/chart/gen',
+            method: 'post',
+            data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        sessionStorage.removeItem(retryKey)
+        return res
+    } catch (error) {
+        if (retries >= maxRetries) {
+            return Promise.reject('重试失败，且已达最大重试次数')
+        }
+        retries++;
+        sessionStorage.setItem(retryKey, retries.toString());
+        await new Promise(resolve => setTimeout(resolve, delay))
+        return genChartWithRetry(data, retries--, delay * 2)
+    }
+}
+
+export { getChartByPage, genChart, deleteChart, getChartById, editChart, tryAgain, genChartWithRetry }

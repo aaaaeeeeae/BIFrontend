@@ -6,12 +6,14 @@
 
 <script>
 import chartForm from '../../components/chartForm.vue'
-import { genChart } from '../../request/chartRequest.js'
+import { genChartWithRetry } from '../../request/chartRequest.js'
+import { getLoginUserId } from '../../request/userRequest.js'
 export default {
     name: '',
     data() {
         return {
-            loading: false
+            loading: false,
+            userId: null
         }
     },
     methods: {
@@ -23,7 +25,7 @@ export default {
                 }
                 try {
                     this.loading = true
-                    await genChart(formData)
+                    await genChartWithRetry(this.userId, formData)
                     this.loading = false
                 } catch (error) {
                     return Promise.reject(error)
@@ -46,6 +48,10 @@ export default {
     },
     components: {
         chartForm
+    },
+    async created(){
+        const res = await getLoginUserId()
+        this.userId = res.id
     }
 }
 </script>

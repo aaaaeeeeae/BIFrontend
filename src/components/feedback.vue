@@ -20,16 +20,16 @@ export default {
         }
     },
     methods: {
-
     }
 }
 </script>
 
 <style lang="less" scoped>
-.card{
+.card {
     border-radius: 15px;
 }
-.title{
+
+.title {
     font-size: large;
     font-weight: bolder;
     padding-bottom: 10px;
