@@ -9,9 +9,9 @@
                 <i class="el-icon-s-marketing"></i>
                 <span slot="title">我的图表</span>
             </el-menu-item>
-            <el-menu-item index="4">
-                <i class="el-icon-setting"></i>
-                <span slot="title">待定....</span>
+            <el-menu-item index="/home/prediction">
+                <i class="el-icon-s-opportunity"></i>
+                <span slot="title">数据预测</span>
             </el-menu-item>
         </el-menu>
     </div>
@@ -27,17 +27,9 @@ export default {
         return {
         }
     },
-    methods: {
-        handleOpen(key, keyPath) {
-            console.log(key, keyPath);
-        },
-        handleClose(key, keyPath) {
-            console.log(key, keyPath);
-        }
-    },
     computed: {
         defaultActive() {
-            const strs = this.$route.path.split('/');
+            const strs = this.$route.path.split('/')
             const path = `/${strs[1]}/${strs[2]}`
             const children = ['/home/detail', '/home/edit']
             return children.includes(path) ? '/home/myCharts' : path

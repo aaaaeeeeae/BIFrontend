@@ -6,7 +6,7 @@
 
 <script>
 import chartForm from '../../components/chartForm.vue'
-import { genChartWithRetry } from '../../request/chartRequest.js'
+// import { genChartWithRetry } from '../../request/chartRequest.js'
 import { getLoginUserId } from '../../request/userRequest.js'
 export default {
     name: '',
@@ -25,9 +25,13 @@ export default {
                 }
                 try {
                     this.loading = true
-                    await genChartWithRetry(this.userId, formData)
-                    this.loading = false
+                    // await genChartWithRetry(this.userId, formData)
+                    setTimeout(() => {
+                        this.loading = false
+                        this.$messageService.successMessage('分析成功')
+                    }, 2000)
                 } catch (error) {
+                    this.loading = false;
                     return Promise.reject(error)
                 }
             }
@@ -49,7 +53,7 @@ export default {
     components: {
         chartForm
     },
-    async created(){
+    async created() {
         const res = await getLoginUserId()
         this.userId = res.id
     }

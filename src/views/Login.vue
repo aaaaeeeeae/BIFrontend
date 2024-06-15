@@ -170,6 +170,14 @@ export default {
   height: 100vh;
   width: 100vw;
 
+  .form ::v-deep {
+    .el-form-item__label {
+      text-align: center;
+    }
+  }
+
+
+
   .bck-photo {
     height: 100%;
     width: 100%;

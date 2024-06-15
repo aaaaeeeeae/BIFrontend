@@ -17,6 +17,15 @@ function genChart(data) {
         }
     })
 }
+
+function predictChart(data) {
+    return request({
+        url: '/chart/predict',
+        method: 'post',
+        data
+    })
+}
+
 function deleteChart(data) {
     return request({
         url: '/chart/delete',
@@ -41,6 +50,17 @@ function editChart(data) {
     })
 }
 
+function uploadFile(data) {
+    return request({
+        url: '/file/uploadFile',
+        method: 'post',
+        data,
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+}
+
 function tryAgain(data) {
     return request({
         url: `/chart/tryAgain?id=${data}`,
@@ -51,7 +71,7 @@ function tryAgain(data) {
     })
 }
 
-async function genChartWithRetry(userId, data, maxRetries = 3, delay = 1000) {
+async function genChartWithRetry(userId, data, maxRetries = 3, delay = 2000) {
     const retryKey = `${userId}-retries-genChart`
     let retries = parseInt(sessionStorage.getItem(retryKey) || 0)
     try {
@@ -76,4 +96,4 @@ async function genChartWithRetry(userId, data, maxRetries = 3, delay = 1000) {
     }
 }
 
-export { getChartByPage, genChart, deleteChart, getChartById, editChart, tryAgain, genChartWithRetry }
+export { getChartByPage, genChart, deleteChart, getChartById, editChart, uploadFile, tryAgain, genChartWithRetry, predictChart }

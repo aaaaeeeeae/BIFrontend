@@ -38,9 +38,15 @@ const routes = [
       component: () => import('../views/home/detail.vue')
     }, {
       path: 'edit',
-      name: "edit",
+      name: 'edit',
       component: () => import('../views/home/edit.vue')
-    }, {
+    }, 
+    {
+      path: 'prediction',
+      name: 'prediction',
+      component: ()=> import('../views/home/prediction.vue')
+    },
+    {
       path: '',
       redirect: 'createChart'
     }]

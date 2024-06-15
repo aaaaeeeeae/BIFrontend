@@ -16,6 +16,7 @@
                             <span>{{ value }}</span>
                         </template>
                     </layout>
+                    <el-button round class="to-predict" @click="toPredict" type="primary">数据预测</el-button>
                 </div>
             </el-card>
             <el-card class="req-card">
@@ -96,7 +97,7 @@ export default {
             })
         },
         editChart() {
-            this.$router.push(`/home/edit?id=${this.chartId}`)
+            this.$router.push(`/home/edit?chartId=${this.chartId}`)
         },
         async init() {
             try {
@@ -109,8 +110,12 @@ export default {
                 this.resultData = mappingRes(this.data)
                 this.chart = convertToObj(data.genChart)
             } catch (error) {
+                this.loading = false
                 console.log(error);
             }
+        },
+        toPredict(){
+            this.$router.push(`/home/prediction?chartId=${this.chartId}`)
         }
     },
     components: {
@@ -136,6 +141,11 @@ export default {
 
     .content {
         margin-top: 20px;
+
+        .to-predict {
+            margin: 30px 0px;
+            width: 500px;
+        }
     }
 
     .res-card {

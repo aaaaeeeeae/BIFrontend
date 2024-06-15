@@ -9,7 +9,7 @@ const md = new MarkdownIt({
     permalinkBefore: true,
     permalinkSymbol: ''
 })
-
+// 将markdown转换为数组层级（表格用）
 export function parseMarkdownForToc(markdownText) {
     const html = md.render(markdownText)
     const dom = new DOMParser().parseFromString(html, 'text/html')
@@ -19,10 +19,11 @@ export function parseMarkdownForToc(markdownText) {
         const level = parseInt(header.tagName.slice(1), 10)  
         const text = header.textContent.trim()  
         const id = header.getAttribute('id') // markdown-it-anchor adds this ID  
-        return { level, text, id }  
+        return { level, text, id }
       })
 }
 
+// 将markdown转换为html
 export function parseMarkdownForHtml(markdownText) {
     const html = md.render(markdownText)
     return html

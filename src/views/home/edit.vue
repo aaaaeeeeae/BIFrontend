@@ -62,7 +62,7 @@ export default {
     },
     computed: {
         chartId() {
-            return this.$route.query.id
+            return this.$route.query.chartId
         }
     }
 }

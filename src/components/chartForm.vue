@@ -14,7 +14,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="分析目标" prop="goal">
-                <el-input type="textarea" v-model="form.goal" placeholder="请输入分析目标，越详细AI分析得越准确哦"></el-input>
+                <el-input type="textarea" v-model="form.goal" placeholder="请输入分析目标，越详细AI分析得越准确哦" autosize></el-input>
             </el-form-item>
             <el-form-item label="上传数据" prop="file" v-if="!isEdit">
                 <el-upload class="upload-demo" action="#" :on-remove="handleRemove" multiple :limit="1"

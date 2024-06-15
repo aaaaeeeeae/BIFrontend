@@ -72,6 +72,7 @@ export default {
     overflow: hidden;
     transition: overflow 0.3s ease;
     margin: 3px 0px;
+    background-color: white;
 
     .catalog-content {
         padding: 0;

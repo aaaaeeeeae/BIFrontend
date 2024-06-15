@@ -1,6 +1,7 @@
 <template>
     <div class="top-bar">
-        <el-menu :default-active="defaultActive" class="el-menu-demo" mode="horizontal" @select="handleSelect" :router="true">
+        <el-menu :default-active="defaultActive" class="el-menu-demo" mode="horizontal" @select="handleSelect"
+            :router="true">
             <div class="bar-content">
                 <el-row :gutter="20">
                     <el-col :span="3" :offset="1">
@@ -21,6 +22,14 @@
                                 <template slot="title">
                                     <el-avatar size="medium" :src='userUrl'></el-avatar>
                                 </template>
+                                <el-menu-item index="quit">
+                                    <i class="el-icon-s-custom"></i>
+                                    <span>个人主页</span>
+                                </el-menu-item>
+                                <el-menu-item index="quit">
+                                    <i class="el-icon-bell"></i>
+                                    <span>消息中心</span>
+                                </el-menu-item>
                                 <el-menu-item index="quit">
                                     <i class="el-icon-switch-button"></i>
                                     <span>退出登录</span>
